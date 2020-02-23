@@ -18,15 +18,15 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener
 	final int MENU = 0;
     final int GAME = 1;
     final int END = 2;
-   
     int currentState = MENU;
-    
+    RocketShip rocket=new RocketShip(250,700,50,50);
     GamePanel(){
     	
     	 Timer frameDraw = new Timer(1000/60,this);
     	    frameDraw.start();
     	
     }
+    
     
     void updateMenuState() {
     	
@@ -53,7 +53,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener
     	g.drawString("Press SPACE for instructions", 110, 500);
     }
     void drawGameState(Graphics g) { 
-    	
+    	g.setColor(Color.BLACK);
+    	g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HIEGHT);
+    	rocket.draw(g);
     }
     void drawEndState(Graphics g)  { 
     	g.setColor(Color.RED);
@@ -69,6 +71,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener
     	g.drawString("Press Enter to restart", 110, 500);
     }
 
+    
    
     
 @Override
@@ -110,25 +113,30 @@ public void keyPressed(KeyEvent e) {
 	    } else {
 	        currentState++;
 	    }
-	    if (e.getKeyCode()==KeyEvent.VK_UP) {
-	        System.out.println("UP");
+	   
+	}
+	 if (e.getKeyCode()==KeyEvent.VK_UP) {
+	        rocket.up();
 	    }
 	    if (e.getKeyCode()==KeyEvent.VK_DOWN) {
-	        System.out.println("down");
+	       rocket.down();
 	    }
 	    if (e.getKeyCode()==KeyEvent.VK_LEFT) {
-	        System.out.println("left");
+	       rocket.left();
 	    }
 	    if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
-	        System.out.println("right");
+	        rocket.right();
 	    }
 	    
-	}   
 }
 
 @Override
 public void keyReleased(KeyEvent e) {
 	// TODO Auto-generated method stub
 	
+
 }
+
+
+
 }
