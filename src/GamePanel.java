@@ -5,14 +5,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener
 {
-
+	Timer alienSpawn; 
+	public static BufferedImage image;
+	public static boolean needImage = true;
+	public static boolean gotImage = false;	
 	Font titleFont=new Font("Arial",Font.PLAIN,48);
 	Font sub=new Font("Arial",Font.PLAIN,20);
 	final int MENU = 0;
@@ -20,13 +25,21 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener
     final int END = 2;
     int currentState = MENU;
     RocketShip rocket=new RocketShip(250,700,50,50);
+    Objectmanager objectmanager=new Objectmanager(rocket);
     GamePanel(){
-    	
+    	if (needImage) {
+    	    loadImage ("space.png");
+    	}
     	 Timer frameDraw = new Timer(1000/60,this);
     	    frameDraw.start();
     	
     }
     
+   void startgame(){
+	   alienSpawn = new Timer(1000 , objectmanager);
+	    alienSpawn.start();
+    	
+    }
     
     void updateMenuState() {
     	
@@ -53,8 +66,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener
     	g.drawString("Press SPACE for instructions", 110, 500);
     }
     void drawGameState(Graphics g) { 
-    	g.setColor(Color.BLACK);
-    	g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HIEGHT);
+    	if (gotImage) {
+    		g.drawImage(image, 0, 0, LeagueInvaders.WIDTH,LeagueInvaders.HIEGHT, null);
+    	} else {
+    		g.setColor(Color.BLUE);
+    		g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HIEGHT);
+    	}
+    
     	rocket.draw(g);
     }
     void drawEndState(Graphics g)  { 
@@ -109,8 +127,11 @@ public void keyPressed(KeyEvent e) {
 	// TODO Auto-generated method stub
 	if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 	    if (currentState == END) {
+	    	alienSpawn.stop();
 	        currentState = MENU;
-	    } else {
+	    } if(currentState == GAME){
+	    	startgame();
+	    }else {
 	        currentState++;
 	    }
 	   
@@ -127,7 +148,25 @@ public void keyPressed(KeyEvent e) {
 	    if (e.getKeyCode()==KeyEvent.VK_RIGHT) {
 	        rocket.right();
 	    }
+	    if (e.getKeyCode()==KeyEvent.VK_SPACE) {
+	    	
+	    	if(currentState==GAME) {
+	    		objectmanager.addProjectile(rocket.getProjectile());
+	    		
+	    	}
+	    }
 	    
+}
+void loadImage(String imageFile) {
+    if (needImage) {
+        try {
+            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+	    gotImage = true;
+        } catch (Exception e) {
+            
+        }
+        needImage = false;
+    }
 }
 
 @Override

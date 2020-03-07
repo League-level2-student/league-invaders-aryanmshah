@@ -1,8 +1,10 @@
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Objectmanager {
+public class Objectmanager implements ActionListener{
 
 	RocketShip big;
 	Random randy;
@@ -71,6 +73,12 @@ for (int i = 0; i < projectiles.size(); i++) {
 				
 				}
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		addAlien();
 	}
 	
 }
